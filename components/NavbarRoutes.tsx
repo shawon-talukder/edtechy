@@ -3,13 +3,12 @@
 import { UserButton } from "@clerk/nextjs";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Button } from "./ui/button";
 
 const NavbarRoutes = () => {
   const pathName = usePathname();
-  const router = useRouter();
 
   // check if the page/route is for teacher
   const isTeacherPage = pathName?.startsWith("/teacher");
@@ -20,10 +19,12 @@ const NavbarRoutes = () => {
   return (
     <div className="flex gap-x-2 ml-auto">
       {isTeacherPage || isPlayerPage ? (
-        <Button variant={"ghost"} size={"sm"}>
-          <LogOut className="h-4 w-4 mr-2" />
-          Exit
-        </Button>
+        <Link href={"/"}>
+          <Button variant={"ghost"} size={"sm"}>
+            <LogOut className="h-4 w-4 mr-2" />
+            Exit
+          </Button>
+        </Link>
       ) : (
         <Link href="/teacher/courses">
           <Button variant={"ghost"} size={"sm"}>
