@@ -19,13 +19,12 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { Course } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface DescriptionFormProps {
-  initialData: {
-    description: string | null;
-  };
+  initialData: Course;
   courseId: string;
 }
 
@@ -44,7 +43,7 @@ const DescriptionForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: course,
+    defaultValues: { description: course?.description || "" },
   });
 
   const { isSubmitting, isValid } = form.formState;
