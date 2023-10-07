@@ -70,12 +70,11 @@ const TitleForm = ({ initialData: course, courseId }: TitleFormProps) => {
   ) : (
     <>
       <Pencil className="h-4 w-4 mr-2" />
-      Edit title
     </>
   );
 
   const editingContent = !isEditing ? (
-    <p>{course.title}</p>
+    <p className="mt-2 text-sm">{course.title}</p>
   ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
