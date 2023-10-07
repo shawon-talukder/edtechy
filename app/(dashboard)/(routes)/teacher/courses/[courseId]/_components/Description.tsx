@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 
 interface DescriptionFormProps {
   initialData: {
-    description?: string;
+    description: string | null;
   };
   courseId: string;
 }
