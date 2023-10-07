@@ -1,10 +1,16 @@
 "use client";
 
+import axios from "axios";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import {
   Form,
   FormControl,
@@ -12,9 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface TitleFormProps {
@@ -32,6 +36,7 @@ const formSchema = z.object({
 
 const TitleForm = ({ initialData: course, courseId }: TitleFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,7 +49,20 @@ const TitleForm = ({ initialData: course, courseId }: TitleFormProps) => {
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      await axios.patch(`/api/courses/${courseId}`, values);
+
+      // if successful
+      // set editing mode to false
+      toggleEdit();
+
+      // send user update message and refresh ta page
+      toast.success("Updated successfully!");
+      router.refresh();
+    } catch (error) {
+      console.log("[COURSE_ID]", error);
+      toast.error("Something went wrong!");
+    }
   };
 
   const editContent = isEditing ? (
