@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import * as z from "zod";
 
@@ -17,6 +18,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -25,6 +28,7 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,8 +38,14 @@ const CreatePage = () => {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const response = await axios.post("/api/course", values);
+      router.push(`/teacher/courses/${response.data?.id}`);
+      toast.success("Created!");
+    } catch (error) {
+      toast.error("something went wrong!");
+    }
   };
 
   return (
@@ -78,10 +88,7 @@ const CreatePage = () => {
                   Cancel
                 </Button>
               </Link>
-              <Button
-                type={"submit"}
-                disabled={!isValid || isSubmitting}
-              >
+              <Button type={"submit"} disabled={!isValid || isSubmitting}>
                 Continue
               </Button>
             </div>
