@@ -4,8 +4,9 @@ import { auth } from "@clerk/nextjs";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import TitleForm from "./_components/TitleForm";
 import DescriptionForm from "./_components/Description";
+import ImageForm from "./_components/ImageForm";
+import TitleForm from "./_components/TitleForm";
 
 interface ICourseItemPage {
   courseId: string;
@@ -66,6 +67,8 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
             initialData={courseInformation}
             courseId={courseId}
           />
+
+          <ImageForm initialData={courseInformation} courseId={courseId} />
         </div>
       </div>
     </div>
