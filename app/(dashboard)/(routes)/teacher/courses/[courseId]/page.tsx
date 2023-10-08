@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 
+import CategoryForm from "./_components/CategoryForm";
 import DescriptionForm from "./_components/Description";
 import ImageForm from "./_components/ImageForm";
 import TitleForm from "./_components/TitleForm";
@@ -31,6 +32,11 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
   if (!courseInformation || !courseInformation.title) {
     return redirect("/");
   }
+
+  // get all categories from database
+  const categories = await db.category.findMany({
+    orderBy: { name: "asc" },
+  });
 
   const requiredFields = [
     courseInformation.title,
@@ -69,6 +75,12 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
           />
 
           <ImageForm initialData={courseInformation} courseId={courseId} />
+
+          <CategoryForm
+            initialData={courseInformation}
+            courseId={courseId}
+            options={categories.map((c) => ({ label: c.name, value: c.id }))}
+          />
         </div>
       </div>
     </div>
