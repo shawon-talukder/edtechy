@@ -2,7 +2,7 @@
 
 import { Attachment, Course } from "@prisma/client";
 import axios from "axios";
-import { File, PlusCircle } from "lucide-react";
+import { File, Loader2, PlusCircle, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -51,6 +51,27 @@ const AttachmentForm = ({
     }
   };
 
+  // deleting an attachment
+  const onDelete = async (id: string) => {
+    try {
+      setDeletingId(id);
+
+      await axios.delete(`/api/courses/${courseId}/attachments/${id}`);
+
+      // if successful
+      // set editing mode to false
+      toggleEdit();
+
+      // send user update message and refresh ta page
+      toast.success("File deleted!");
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+    } finally {
+      setDeletingId(null);
+    }
+  };
   // inner text html for icon, 'cancel' if it is in editing mode or show icon
   const editContent = isEditing ? (
     "Cancel"
@@ -91,6 +112,18 @@ const AttachmentForm = ({
         >
           <File className="h-4 w-4 mr-2 flex-shrink-0" />
           <p className="text-xs line-clamp-1">{atch.name}</p>
+          {deletingId === atch.id ? (
+            <div className="ml-auto">
+              <Loader2 className="h-4 w-4 animate-spin" />
+            </div>
+          ) : (
+            <button
+              onClick={() => onDelete(atch.id)}
+              className="ml-auto hover:opacity-75 transition"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
       ))}
     </div>
