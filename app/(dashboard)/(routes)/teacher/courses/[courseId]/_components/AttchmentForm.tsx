@@ -26,6 +26,8 @@ const AttachmentForm = ({
   courseId,
 }: AttachmentFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
   const router = useRouter();
 
   // handlers
@@ -33,7 +35,20 @@ const AttachmentForm = ({
 
   // handle submit function
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    
+    try {
+      await axios.post(`/api/courses/${courseId}/attachments/`, values);
+
+      // if successful
+      // set editing mode to false
+      toggleEdit();
+
+      // send user update message and refresh ta page
+      toast.success("File uploaded successfully!");
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+    }
   };
 
   // inner text html for icon, 'cancel' if it is in editing mode or show icon
