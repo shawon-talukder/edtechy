@@ -1,14 +1,20 @@
 import IconBadge from "@/components/IconBadge";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { CircleDollarSign, LayoutDashboard, ListChecks } from "lucide-react";
+import {
+  CircleDollarSign,
+  File,
+  LayoutDashboard,
+  ListChecks,
+} from "lucide-react";
 import { redirect } from "next/navigation";
 
+import AttachmentForm from "./_components/AttchmentForm";
 import CategoryForm from "./_components/CategoryForm";
 import DescriptionForm from "./_components/Description";
 import ImageForm from "./_components/ImageForm";
-import TitleForm from "./_components/TitleForm";
 import PriceForm from "./_components/PriceForm";
+import TitleForm from "./_components/TitleForm";
 
 interface ICourseItemPage {
   courseId: string;
@@ -27,6 +33,13 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
   // get course details
   const courseInformation = await db.course.findUnique({
     where: { id: courseId },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
   });
 
   // if there is no course id, consider it invalid and return to home page
@@ -96,8 +109,17 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
               <IconBadge icon={CircleDollarSign} />
               <h2 className="text-xl">Sell your course</h2>
             </div>
-            <PriceForm initialData={courseInformation}
-            courseId={courseId}/>
+            <PriceForm initialData={courseInformation} courseId={courseId} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <IconBadge icon={File} />
+              <h2 className="text-xl">Resources & Attachments</h2>
+            </div>
+            <AttachmentForm
+              initialData={courseInformation}
+              courseId={courseId}
+            />
           </div>
         </div>
       </div>
