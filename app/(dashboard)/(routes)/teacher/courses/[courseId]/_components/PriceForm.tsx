@@ -108,7 +108,7 @@ const PriceForm = ({ initialData: course, courseId }: PriceFormProps) => {
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Course Price
         <Button onClick={toggleEdit} variant={"ghost"}>
           {editContent}
         </Button>
