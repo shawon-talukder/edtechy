@@ -71,4 +71,11 @@ model Chapter {
   updatedAt DateTime @updatedAt
 }
 
+model MuxData {
+  id         String @id @default(uuid())
+  assetId    String
+  playbackId String
 
+  chapterId String  @unique
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
