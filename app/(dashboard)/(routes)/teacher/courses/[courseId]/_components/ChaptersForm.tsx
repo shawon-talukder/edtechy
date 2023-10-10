@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { PlusCircle } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -138,7 +138,12 @@ const ChaptersForm = ({ initialData: course, courseId }: ChaptersFormProps) => {
     </p>
   );
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+      {isUpdating && (
+        <div className="absolute top-0 right-0 h-full w-full rounded-md bg-slate-500/20 flex items-center justify-center">
+          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+        </div>
+      )}
       <div className="font-medium flex items-center justify-between">
         Course Chapters
         <Button onClick={toggleCreate} variant={"ghost"}>
