@@ -49,7 +49,20 @@ const ChaptersForm = ({ initialData: course, courseId }: ChaptersFormProps) => {
   const toggleCreate = () => setIsCreating((current) => !current);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    
+    try {
+      await axios.post(`/api/courses/${courseId}/chapters`, values);
+
+      // if successful
+      // set creating mode to false
+      toggleCreate();
+
+      // send user update message and refresh ta page
+      toast.success("Chapter created!");
+      router.refresh();
+    } catch (error) {
+      console.log("[COURSE_ID_CHAPTERS]", error);
+      toast.error("Something went wrong!");
+    }
   };
 
   const editContent = isCreating ? (
