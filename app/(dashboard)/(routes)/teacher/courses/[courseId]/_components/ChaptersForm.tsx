@@ -28,6 +28,7 @@ interface ChaptersFormProps {
   initialData: Course & { chapters: Chapter[] };
   courseId: string;
 }
+export type updateDataType = { id: string; position: number };
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -66,6 +67,21 @@ const ChaptersForm = ({ initialData: course, courseId }: ChaptersFormProps) => {
     }
   };
 
+  const handleReorder = async (updateData: updateDataType[]) => {
+    try {
+      setIsUpdating(true);
+      await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
+        list: updateData,
+      });
+
+      toast.success("Reordered!");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong!");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
   const editContent = isCreating ? (
     "Cancel"
   ) : (
@@ -110,7 +126,7 @@ const ChaptersForm = ({ initialData: course, courseId }: ChaptersFormProps) => {
       {course.chapters.length === 0 && "No Chapters"}
       <ChaptersList
         onEdit={() => {}}
-        onReOrder={() => {}}
+        onReOrder={handleReorder}
         items={course.chapters || []}
       />
     </p>
