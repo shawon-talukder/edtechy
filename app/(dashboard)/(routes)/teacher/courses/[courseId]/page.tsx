@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 
 import AttachmentForm from "./_components/AttchmentForm";
 import CategoryForm from "./_components/CategoryForm";
+import ChaptersForm from "./_components/ChaptersForm";
 import DescriptionForm from "./_components/Description";
 import ImageForm from "./_components/ImageForm";
 import PriceForm from "./_components/PriceForm";
@@ -32,8 +33,13 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
   //lookup the database for the course
   // get course details
   const courseInformation = await db.course.findUnique({
-    where: { id: courseId },
+    where: { id: courseId, userId },
     include: {
+      chapters: {
+        orderBy: {
+          position: "asc",
+        },
+      },
       attachments: {
         orderBy: {
           createdAt: "desc",
@@ -58,6 +64,7 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
     courseInformation.imageUrl,
     courseInformation.price,
     courseInformation.categoryId,
+    courseInformation.chapters.some((ch) => ch.isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -102,7 +109,7 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
               <IconBadge icon={ListChecks} />
               <h2 className="text-xl">Course Chapters</h2>
             </div>
-            {/* <div>CHAPTERS</div> */}
+            <ChaptersForm initialData={courseInformation} courseId={courseId} />
           </div>
           <div>
             <div className="flex items-center gap-2">
