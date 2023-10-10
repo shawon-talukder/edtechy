@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Chapter, Course } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import ChaptersList from "./ChaptersList";
 
 interface ChaptersFormProps {
   initialData: Course & { chapters: Chapter[] };
@@ -107,6 +108,11 @@ const ChaptersForm = ({ initialData: course, courseId }: ChaptersFormProps) => {
       )}
     >
       {course.chapters.length === 0 && "No Chapters"}
+      <ChaptersList
+        onEdit={() => {}}
+        onReOrder={() => {}}
+        items={course.chapters || []}
+      />
     </p>
   );
 
