@@ -7,7 +7,12 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "@hello-pangea/dnd";
 
 interface ChaptersListProps {
   onEdit: (id: string) => void;
@@ -27,12 +32,36 @@ const ChaptersList = ({ items, onEdit, onReOrder }: ChaptersListProps) => {
     setChapters(items);
   }, [items]);
 
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const items = Array.from(chapters);
+
+    const [reorderedItem] = items.splice(result.source.index, 1);
+
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    const startIndex = Math.min(result.source.index, result.destination.index);
+    const endIndex = Math.max(result.source.index, result.destination.index);
+
+    const updatedChapters = items.slice(startIndex, endIndex + 1);
+
+    setChapters(items);
+
+    const bulkUpdateData = updatedChapters.map((ch) => ({
+      id: ch.id,
+      position: items.findIndex((item) => item.id === ch.id),
+    }));
+
+    onReOrder(bulkUpdateData);
+  };
+
   // prevent hydration error
   if (!isMounted) {
     return null;
   }
   return (
-    <DragDropContext onDragEnd={() => {}}>
+    <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="chapters">
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
