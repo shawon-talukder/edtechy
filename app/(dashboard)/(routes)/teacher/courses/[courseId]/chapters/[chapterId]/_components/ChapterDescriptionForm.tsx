@@ -81,7 +81,7 @@ const ChapterDescriptionForm = ({
   );
 
   const editingContent = !isEditing ? (
-    <p
+    <div
       className={cn(
         "text-sm mt-2",
         !initialData.description && "text-slate-500 italic"
@@ -89,7 +89,7 @@ const ChapterDescriptionForm = ({
     >
       {!initialData.description && "No Description"}
       {initialData.description && <Preview value={initialData?.description} />}
-    </p>
+    </div>
   ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
