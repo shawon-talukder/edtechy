@@ -15,7 +15,11 @@ const Preview = ({ value }: PreviewProps) => {
     []
   );
 
-  return <ReactQuill theme="bubble" value={value} readOnly />;
+  return (
+    <div className="bg-neutral-200/50 rounded-md mr-2">
+      <ReactQuill theme="bubble" value={value} readOnly />
+    </div>
+  );
 };
 
 export default Preview;
