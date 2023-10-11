@@ -88,7 +88,7 @@ const ChapterAccessForm = ({
     >
       {initialData?.isFree
         ? "This chapter is Free"
-        : "This chapter is for free preview"}
+        : "This chapter is not for free preview"}
     </p>
   ) : (
     <Form {...form}>
