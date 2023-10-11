@@ -8,8 +8,8 @@ interface IParams {
 }
 
 const { Video } = new Mux(
-  process.env.MUX_TOKEN_ID!,
-  process.env.MUX_TOKEN_SECRET!
+  process.env.MUX_CLIENT_ID!,
+  process.env.MUX_CLIENT_SECRET!
 );
 
 export async function PATCH(req: Request, { params }: { params: IParams }) {
@@ -55,8 +55,8 @@ export async function PATCH(req: Request, { params }: { params: IParams }) {
 
       // if exists, delete the previous one from both mux assets and our database
       if (existingMuxData) {
-        await Video.Assets.del(existingMuxData?.assetId);
         await db.muxData.delete({ where: { id: existingMuxData?.id } });
+        await Video.Assets.del(existingMuxData?.assetId);
       }
 
       // add new video to mux asset
