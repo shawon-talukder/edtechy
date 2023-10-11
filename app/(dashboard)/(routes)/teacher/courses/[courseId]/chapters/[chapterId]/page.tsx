@@ -10,6 +10,7 @@ import Banner from "@/components/Banner";
 import IconBadge from "@/components/IconBadge";
 
 import ChapterAccessForm from "./_components/ChapterAccessForm";
+import ChapterActions from "./_components/ChapterActions";
 import ChapterDescriptionForm from "./_components/ChapterDescriptionForm";
 import ChapterTitleForm from "./_components/ChapterTitleForm";
 import ChapterVideoForm from "./_components/ChapterVideoForm";
@@ -45,6 +46,9 @@ const ChapterIdPage = async ({ params }: { params: IParams }) => {
   const completedFields = requiredFields.filter(Boolean).length;
 
   const completedText = `(${completedFields}/${totalFields})`;
+
+  const isComplete = requiredFields.every(Boolean);
+
   return (
     <>
       {!chapter.isPublished && (
@@ -70,6 +74,12 @@ const ChapterIdPage = async ({ params }: { params: IParams }) => {
                   Complete all fields {completedText}
                 </span>
               </div>
+              <ChapterActions
+                disabled={!isComplete}
+                courseId={courseId}
+                chapterId={chapterId}
+                isPublished={chapter.isPublished}
+              />
             </div>
           </div>
         </div>
