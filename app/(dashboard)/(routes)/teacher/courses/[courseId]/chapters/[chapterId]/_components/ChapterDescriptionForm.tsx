@@ -11,6 +11,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 
 import Editor from "@/components/Editor";
+import Preview from "@/components/Preview";
 import {
   Form,
   FormControl,
@@ -87,6 +88,7 @@ const ChapterDescriptionForm = ({
       )}
     >
       {!initialData.description && "No Description"}
+      {initialData.description && <Preview value={initialData?.description} />}
     </p>
   ) : (
     <Form {...form}>

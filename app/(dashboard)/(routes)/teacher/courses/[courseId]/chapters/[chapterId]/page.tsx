@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { ArrowLeft, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import ChapterDescriptionForm from "./_components/ChapterDescriptionForm";
 import ChapterTitleForm from "./_components/ChapterTitleForm";
 
 interface IParams {
@@ -66,6 +67,12 @@ const ChapterIdPage = async ({ params }: { params: IParams }) => {
               <h2 className="tex-xl">Customize your chapter</h2>
             </div>
             <ChapterTitleForm
+              courseId={courseId}
+              initialData={chapter}
+              chapterId={chapterId}
+            />
+
+            <ChapterDescriptionForm
               courseId={courseId}
               initialData={chapter}
               chapterId={chapterId}
