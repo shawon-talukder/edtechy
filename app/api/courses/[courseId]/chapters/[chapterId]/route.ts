@@ -82,3 +82,82 @@ export async function PATCH(req: Request, { params }: { params: IParams }) {
     return new NextResponse("Server error", { status: 500 });
   }
 }
+
+export async function DELETE(req: Request, { params }: { params: IParams }) {
+  try {
+    const { userId } = auth();
+
+    if (!userId) {
+      return new NextResponse("unauthorized!", { status: 401 });
+    }
+
+    // destructuring
+    const { courseId, chapterId } = params;
+
+    if (!chapterId || !courseId) {
+      return new NextResponse("invalid reuest", { status: 400 });
+    }
+
+    // check user is the owner or not
+    const courseOwner = await db.course.findUnique({
+      where: { id: courseId, userId },
+    });
+
+    if (!courseOwner) {
+      return new NextResponse("unauthorized", { status: 401 });
+    }
+
+    // find chapter with the chapter id
+    const chapter = await db.chapter.findUnique({
+      where: {
+        id: chapterId,
+        courseId,
+      },
+    });
+
+    if (!chapter) {
+      return new NextResponse("Invalid request!", { status: 400 });
+    }
+
+    // if there is video url, delete the video url from database
+    // delete video data from mux database
+    if (chapter.videoUrl) {
+      // get mux data for the chapter
+      const existingMuxData = await db.muxData.findFirst({
+        where: { chapterId },
+      });
+
+      if (existingMuxData) {
+        // delete from mux data
+        await Video.Assets.del(existingMuxData?.id);
+
+        // delete from database
+        await db.muxData.delete({ where: { id: existingMuxData.id } });
+      }
+    }
+
+    // delete the chapter
+    const deletedChapter = await db.chapter.delete({
+      where: { id: chapterId },
+    });
+
+    // if the course is published, deleting one chapter should draft the course
+    // user should publish one more time
+    const publishedChapterInCourse = await db.chapter.findMany({
+      where: { courseId, isPublished: true },
+    });
+
+    // if there is data that are published
+    if (!publishedChapterInCourse.length) {
+      await db.course.update({
+        where: { id: courseId },
+        data: { isPublished: false },
+      });
+    }
+
+    return NextResponse.json(deletedChapter);
+  } catch (error) {
+    console.log("CHAPTER_ID_DELETE", error);
+    return new NextResponse("Server error", { status: 500 });
+  }
+}
