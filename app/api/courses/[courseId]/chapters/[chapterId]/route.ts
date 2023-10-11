@@ -1,10 +1,17 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
+import Mux from "@mux/mux-node";
 import { NextResponse } from "next/server";
 interface IParams {
   courseId: string;
   chapterId: string;
 }
+
+const { Video } = new Mux(
+  process.env.MUX_TOKEN_ID!,
+  process.env.MUX_TOKEN_SECRET!
+);
+
 export async function PATCH(req: Request, { params }: { params: IParams }) {
   try {
     const { userId } = auth();
@@ -38,6 +45,36 @@ export async function PATCH(req: Request, { params }: { params: IParams }) {
       where: { courseId, id: chapterId },
       data: { ...values },
     });
+
+    // update video upload
+    if (values?.videoUrl) {
+      // check if there is already a video exists on this chapter
+      const existingMuxData = await db.muxData.findFirst({
+        where: { chapterId },
+      });
+
+      // if exists, delete the previous one from both mux assets and our database
+      if (existingMuxData) {
+        await Video.Assets.del(existingMuxData?.assetId);
+        await db.muxData.delete({ where: { id: existingMuxData?.id } });
+      }
+
+      // add new video to mux asset
+      const asset = await Video.Assets.create({
+        input: values.videoUrl,
+        playback_policy: "public",
+        test: false,
+      });
+
+      // push to the database
+      await db.muxData.create({
+        data: {
+          chapterId,
+          assetId: asset.id,
+          playbackId: asset.playback_ids?.[0].id!,
+        },
+      });
+    }
 
     return NextResponse.json(updateData);
   } catch (error) {
