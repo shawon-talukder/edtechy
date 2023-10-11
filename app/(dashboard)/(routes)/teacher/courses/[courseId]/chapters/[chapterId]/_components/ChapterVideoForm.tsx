@@ -30,6 +30,7 @@ const ChapterVideoForm = ({
   chapterId,
 }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // handlers
@@ -38,6 +39,7 @@ const ChapterVideoForm = ({
   // handle submit function
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsLoading(true);
       await axios.patch(
         `/api/courses/${courseId}/chapters/${chapterId}`,
         values
@@ -53,6 +55,8 @@ const ChapterVideoForm = ({
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -100,7 +104,7 @@ const ChapterVideoForm = ({
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
         Chapter Video
-        <Button onClick={toggleEdit} variant={"ghost"}>
+        <Button onClick={toggleEdit} variant={"ghost"} disabled={isLoading}>
           {editContent}
         </Button>
       </div>
