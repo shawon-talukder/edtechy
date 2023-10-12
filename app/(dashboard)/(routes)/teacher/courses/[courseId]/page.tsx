@@ -77,8 +77,11 @@ const CourseItemPage = async ({ params }: { params: ICourseItemPage }) => {
   const isComplete = requiredFields.every(Boolean);
   return (
     <>
-      {courseInformation.isPublished && (
-        <Banner label="The course is unpublished. This will not be visible" />
+      {!courseInformation.isPublished && (
+        <Banner
+          label="The course is unpublished. This will not be visible"
+          variant={"warning"}
+        />
       )}
       <div className="p-6">
         <div className="flex items-center justify-between">
