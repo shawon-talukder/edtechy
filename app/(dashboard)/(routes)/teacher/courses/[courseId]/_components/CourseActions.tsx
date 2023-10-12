@@ -34,6 +34,8 @@ const CourseActions = ({
 
         toast.success("course published!");
       }
+
+      router.refresh();
     } catch (error) {
       toast.error("Something went wrong!");
     } finally {
