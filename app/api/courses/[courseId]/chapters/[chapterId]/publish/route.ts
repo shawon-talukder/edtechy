@@ -18,7 +18,7 @@ export async function PATCH(req: Request, { params }: { params: IParams }) {
     const { courseId, chapterId } = params;
 
     if (!chapterId || !courseId) {
-      return new NextResponse("invalid reuest", { status: 400 });
+      return new NextResponse("invalid request", { status: 400 });
     }
 
     // lookup the database if the chapter exists on course
@@ -42,7 +42,7 @@ export async function PATCH(req: Request, { params }: { params: IParams }) {
       !chapter.title ||
       !chapter.description ||
       !chapter.videoUrl ||
-      muxData
+      !muxData
     ) {
       return new NextResponse("All fields required!", { status: 400 });
     }
