@@ -1,12 +1,13 @@
 "use client";
 
-import ConfirmModal from "@/components/modals/ConfirmModal";
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+
+import ConfirmModal from "@/components/modals/ConfirmModal";
+import { Button } from "@/components/ui/button";
 
 interface ChapterActionsProps {
   isPublished: boolean;
