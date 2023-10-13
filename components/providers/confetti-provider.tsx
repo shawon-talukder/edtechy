@@ -14,6 +14,8 @@ const ConfettiProvider = () => {
     <ReactConfetti
       numberOfPieces={500}
       className="pointer-events-none z-[100]"
+      recycle={false}
+      onConfettiComplete={() => confetti.onClose()}
     />
   );
 };
