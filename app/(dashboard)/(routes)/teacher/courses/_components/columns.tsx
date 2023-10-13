@@ -1,5 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowDown, ArrowUp, MoreHorizontal, Pencil } from "lucide-react";
+import Link from "next/link";
+
+import { Course } from "@prisma/client";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,10 +15,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Course } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, MoreHorizontal, Pencil } from "lucide-react";
-import Link from "next/link";
 
 const getIcon = (direction: boolean) => {
   if (direction) {
@@ -47,10 +51,28 @@ export const columns: ColumnDef<Course>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const price = parseFloat(row.getValue("price") || "0");
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(price);
+      
+      return formatted;
+    },
   },
   {
     accessorKey: "isPublished",
     header: "Status",
+    cell: ({ row }) => {
+      const isPublished = row.getValue("isPublished") || false;
+
+      return (
+        <Badge className={cn("bg-slate-500", isPublished && "bg-sky-700")}>
+          {isPublished ? "Published" : "Draft"}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",
