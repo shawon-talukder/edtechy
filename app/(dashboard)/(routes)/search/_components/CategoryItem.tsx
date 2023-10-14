@@ -16,7 +16,7 @@ const CategoryItem = ({ label, value, icon: Icon }: CategoryItemProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   const currentId = searchParams.get("categoryId");
   const currentTitle = searchParams.get("title");
 
@@ -28,7 +28,7 @@ const CategoryItem = ({ label, value, icon: Icon }: CategoryItemProps) => {
         url: pathname,
         query: {
           title: currentTitle,
-          categoryId: isSelected ? "null" : value,
+          categoryId: isSelected ? null : value,
         },
       },
       { skipEmptyString: true, skipNull: true }
