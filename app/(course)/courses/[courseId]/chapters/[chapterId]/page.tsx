@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import getChapter from "@/actions/get-chapter";
 
 import Banner from "@/components/Banner";
+import CourseEnrollButton from "./_components/CourseEnrollButton";
 import VideoPlayer from "./_components/VideoPlayer";
 
 const ChapterIdPage = async ({
@@ -62,6 +63,19 @@ const ChapterIdPage = async ({
             isLocked={isLocked}
             completeOnEnd={completeOnEnd!}
           />
+        </div>
+        <div>
+          <div className="p-4 flex flex-colmd:flex-row items-center justify-between">
+            <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
+            {purchase ? (
+              "Purchase button"
+            ) : (
+              <CourseEnrollButton
+                courseId={params.courseId}
+                price={course.price!}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
