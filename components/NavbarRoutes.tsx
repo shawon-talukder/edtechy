@@ -15,7 +15,7 @@ const NavbarRoutes = () => {
   const isTeacherPage = pathName?.startsWith("/teacher");
 
   // check for video player page/routing
-  const isPlayerPage = pathName?.includes("/chapter");
+  const isPlayerPage = pathName?.includes("/course");
 
   const isSearchPage = pathName.startsWith("/search");
 
