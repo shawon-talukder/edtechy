@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import getChapter from "@/actions/get-chapter";
 
 import Banner from "@/components/Banner";
+import Preview from "@/components/Preview";
+import { Separator } from "@/components/ui/separator";
+import { File } from "lucide-react";
 import CourseEnrollButton from "./_components/CourseEnrollButton";
 import VideoPlayer from "./_components/VideoPlayer";
 
@@ -65,7 +68,7 @@ const ChapterIdPage = async ({
           />
         </div>
         <div>
-          <div className="p-4 flex flex-colmd:flex-row items-center justify-between">
+          <div className="p-4 flex flex-col md:flex-row items-center justify-between">
             <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
             {purchase ? (
               "Purchase button"
@@ -76,6 +79,28 @@ const ChapterIdPage = async ({
               />
             )}
           </div>
+          <Separator />
+          <div>
+            <Preview value={chapter.description!} />
+          </div>
+          {!!attachments.length && (
+            <>
+              <Separator />
+              <div className="p-4">
+                {attachments.map((attachment) => (
+                  <a
+                    href={attachment.url}
+                    key={attachment.id}
+                    target="_blank"
+                    className="flex items-center p-3 w-full bg-sky-200 border text-sky-700 rounded-md hover:underline"
+                  >
+                    <File />
+                    <p className="line-clamp-1">{attachment.name}</p>
+                  </a>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
