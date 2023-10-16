@@ -1,10 +1,15 @@
 "use client";
 
-import MuxPlayer from "@mux/mux-player-react";
+import axios from "axios";
+import { Loader2, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { cn } from "@/lib/utils";
-import { Loader2, Lock } from "lucide-react";
+
+import useConfettiStore from "@/hooks/useConfettiStore";
+import MuxPlayer from "@mux/mux-player-react";
 
 interface VideoPlayerProps {
   courseId: string;
@@ -26,14 +31,37 @@ const VideoPlayer = ({
   nextChapterId,
 }: VideoPlayerProps) => {
   const [isReady, setIsReady] = useState(false);
+  const router = useRouter();
+  const confetti = useConfettiStore();
 
-  console.log(playbackId);
   const lockContent = (
     <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-800 gap-y-2  text-secondary">
       <Lock className="h-8 w-8" />
       <p className="text-sm">This chapter is locked</p>
     </div>
   );
+
+  const handleEnd = async () => {
+    try {
+      if (completeOnEnd) {
+        await axios.put(
+          `/api/courses/${courseId}/chapters/${chapterId}/progress`,
+          { isCompleted: true }
+        );
+      }
+      if (nextChapterId) {
+        router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
+      }
+
+      router.refresh();
+
+      if (!nextChapterId) {
+        confetti.onOpen();
+      }
+    } catch (error) {
+      toast.error("something went wrong!");
+    }
+  };
 
   return (
     <div className="relative aspect-video">
@@ -49,7 +77,7 @@ const VideoPlayer = ({
           playbackId={playbackId}
           className={cn(!isReady && "hidden")}
           onCanPlay={() => setIsReady(true)}
-          onEnded={() => {}}
+          onEnded={handleEnd}
           autoPlay
         />
       )}
