@@ -43,7 +43,7 @@ const CourseProgressButton = ({
       }
 
       if (!isCompleted && nextChapterId) {
-        router.push(`/api/courses/${courseId}/chapters/${nextChapterId}`);
+        router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
       }
 
       router.refresh();
