@@ -64,6 +64,7 @@ const getChapter = async ({ userId, courseId, chapterId }: GetChapterProps) => {
       attachments,
       nextChapter,
       userProgress,
+      purchase,
     };
   } catch (error) {
     console.log("ACTION/CHAPTER", error);
