@@ -4,11 +4,14 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 const progressVariants = cva("h-full w-full flex-1 bg-primary transition-all", {
   variants: {
-    variant: { default: "bg-sky-600", success: "bg-emerald-700" },
+    variant: {
+      default: "bg-sky-600",
+      success: "bg-emerald-700",
+    },
   },
   defaultVariants: {
     variant: "default",
@@ -21,6 +24,7 @@ export interface ProgressProps
 
 type CombinedProgressProps = ProgressProps &
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>;
+
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   CombinedProgressProps
@@ -34,7 +38,7 @@ const Progress = React.forwardRef<
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className={cn({ variant })}
+      className={cn(progressVariants({ variant }))}
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     />
   </ProgressPrimitive.Root>
