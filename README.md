@@ -16,7 +16,10 @@ There is two modes, for both 1. [user](https://github.com/shawon-talukder/edtech
 
 User can :
 
--
+- authentication
+- can purchase any course through stripe
+- purchased course progress
+- watch free chapter
 
 ### Teacher
 
@@ -28,3 +31,5 @@ Teacher can:
 - create multiple chapters
 - add video to chapter
 - set price for the course
+- need authentication to do CRUD operation
+- analytics on all course revenue and sales
